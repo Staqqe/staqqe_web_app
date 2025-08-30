@@ -1,0 +1,352 @@
+"use client";
+
+
+import React, { useState, createContext, useContext } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { 
+  Home, 
+  User, 
+  CreditCard, 
+  Users, 
+  Settings, 
+  Menu,
+  X,
+  Bell,
+  Wallet,
+  ArrowLeft
+} from 'lucide-react';
+import { Geist, Geist_Mono } from "next/font/google";
+import "./globals.css";
+
+// Create context for app state
+const AppContext = createContext();
+
+export const useAppContext = () => {
+  const context = useContext(AppContext);
+  if (!context) {
+    throw new Error('useAppContext must be used within AppProvider');
+  }
+  return context;
+};
+
+export default function RootLayout({ children }) {
+  const pathname = usePathname();
+  const router = useRouter();
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  
+  // App state
+  const [user] = useState({
+    name: 'John Doe',
+    email: 'john@example.com',
+    accountNumber: '1234567890',
+    balance: 25750.00,
+    avatar: 'JD'
+  });
+
+  const [selectedStaq, setSelectedStaq] = useState({
+    id: 1,
+    name: 'Family Savings',
+    balance: 15000.00,
+    members: 4,
+    admins: ['John Doe', 'Jane Doe'],
+    isAdmin: true,
+    accountNumber: 'STQ001234567',
+    created: '2024-01-15',
+    goal: 50000,
+    description: 'Saving for family vacation'
+  });
+
+  // Sample data
+  const staqs = [
+    {
+      id: 1,
+      name: 'Family Savings',
+      balance: 15000.00,
+      members: 4,
+      admins: ['John Doe', 'Jane Doe'],
+      isAdmin: true,
+      accountNumber: 'STQ001234567',
+      created: '2024-01-15',
+      goal: 50000,
+      description: 'Saving for family vacation'
+    },
+    {
+      id: 2,
+      name: 'Friends Fund',
+      balance: 8500.50,
+      members: 6,
+      admins: ['Mike Johnson'],
+      isAdmin: false,
+      accountNumber: 'STQ001234568',
+      created: '2024-02-01',
+      goal: 20000,
+      description: 'Emergency fund for friends'
+    }
+  ];
+
+  const requests = [
+    {
+      id: 1,
+      type: 'withdrawal',
+      amount: 5000,
+      requestedBy: 'Jane Doe',
+      staqName: 'Family Savings',
+      reason: 'Medical emergency',
+      status: 'pending',
+      approvals: ['John Doe'],
+      totalAdmins: 2,
+      createdAt: '2024-08-28T10:30:00Z'
+    }
+  ];
+
+  const transactions = [
+    {
+      id: 1,
+      type: 'deposit',
+      amount: 2000,
+      from: 'John Doe',
+      to: 'Family Savings',
+      date: '2024-08-28T09:00:00Z',
+      status: 'completed'
+    },
+    {
+      id: 2,
+      type: 'withdrawal',
+      amount: 1500,
+      from: 'Friends Fund',
+      to: 'John Doe',
+      date: '2024-08-27T14:30:00Z',
+      status: 'completed'
+    }
+  ];
+
+  // Navigation items
+  const generalNavItems = [
+    { id: '/', label: 'Home', icon: Home, path: '/' },
+    { id: '/profile', label: 'Profile', icon: User, path: '/profile' },
+    { id: '/transactions', label: 'Transactions', icon: CreditCard, path: '/transactions' },
+    { id: '/staqs', label: 'Staqs', icon: Users, path: '/staqs' }
+  ];
+
+  const staqNavItems = [
+    { id: '/staq/overview', label: 'Overview', icon: Home, path: '/staq/overview' },
+    { id: '/staq/requests', label: 'Requests', icon: Bell, path: '/staq/requests' },
+    { id: '/staq/transactions', label: 'Transactions', icon: CreditCard, path: '/staq/transactions' },
+    { id: '/staq/members', label: 'Members', icon: Users, path: '/staq/members' },
+    { id: '/staq/settings', label: 'Settings', icon: Settings, path: '/staq/settings' }
+  ];
+
+  // Determine current navigation
+  const isStaqPage = pathname.startsWith('/staq');
+  const currentNavItems = isStaqPage ? staqNavItems : generalNavItems;
+
+  // Get page title
+  const getPageTitle = () => {
+    if (pathname.startsWith('/staq')) {
+      const staqTitles = {
+        '/staq/overview': selectedStaq?.name || 'Staq',
+        '/staq/requests': 'Requests',
+        '/staq/transactions': 'Transactions', 
+        '/staq/members': 'Members',
+        '/staq/settings': 'Settings'
+      };
+      return staqTitles[pathname] || 'Staq';
+    }
+
+    const generalTitles = {
+      '/': 'Home',
+      '/profile': 'Profile',
+      '/transactions': 'Transactions',
+      '/staqs': 'My Staqs'
+    };
+    return generalTitles[pathname] || 'Staq';
+  };
+
+  // Navigation component
+  const Navigation = ({ items, mobile = false }) => (
+    <nav className={mobile ? "flex justify-around bg-white border-t border-gray-200 p-2" : "space-y-2"}>
+      {items.map((item) => {
+        const Icon = item.icon;
+        const isActive = pathname === item.path;
+        
+        return (
+          <button
+            key={item.id}
+            onClick={() => {
+              router.push(item.path);
+              if (mobile) setSidebarOpen(false);
+            }}
+            className={`${
+              mobile 
+                ? "flex flex-col items-center p-2 text-xs"
+                : "flex items-center w-full px-4 py-3 text-sm rounded-lg"
+            } ${
+              isActive
+                ? mobile 
+                  ? "text-blue-600"
+                  : "bg-blue-50 text-blue-600"
+                : mobile
+                  ? "text-gray-500"
+                  : "text-gray-600 hover:bg-gray-50"
+            }`}
+          >
+            <Icon className={mobile ? "h-5 w-5 mb-1" : "h-5 w-5 mr-3"} />
+            {item.label}
+          </button>
+        );
+      })}
+    </nav>
+  );
+
+  // Header component
+  const Header = () => (
+    <header className="bg-white border-b border-gray-200 px-4 py-4">
+      <div className="flex items-center justify-between">
+        <div className="flex items-center">
+          {isStaqPage ? (
+            <button 
+              onClick={() => router.push('/staqs')} 
+              className="mr-4 p-1"
+            >
+              <ArrowLeft className="h-6 w-6" />
+            </button>
+          ) : (
+            <button 
+              onClick={() => setSidebarOpen(true)} 
+              className="md:hidden mr-4 p-1"
+            >
+              <Menu className="h-6 w-6" />
+            </button>
+          )}
+          <h1 className="text-xl font-semibold text-gray-900">{getPageTitle()}</h1>
+        </div>
+        <div className="flex items-center space-x-4">
+          <Bell className="h-6 w-6 text-gray-500" />
+          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
+            <span className="text-white text-sm font-medium">{user.avatar}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+  );
+
+  return (
+    <html>
+      <body>
+
+
+    <AppContext.Provider value={{
+      user,
+      selectedStaq,
+      setSelectedStaq,
+      staqs,
+      requests,
+      transactions
+    }}>
+      <div className="min-h-screen bg-gray-50 flex">
+        {/* Desktop Sidebar */}
+        <div className="hidden md:flex md:w-64 md:flex-col">
+          <div className="flex-1 flex flex-col bg-white border-r border-gray-200">
+            <div className="flex items-center px-6 py-6 border-b border-gray-200">
+              <div className="flex items-center">
+                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                  <Wallet className="h-5 w-5 text-white" />
+                </div>
+                <span className="text-xl font-bold text-gray-900">Staq</span>
+              </div>
+            </div>
+            
+            <div className="flex-1 px-4 py-6">
+              {isStaqPage && (
+                <div className="mb-6">
+                  <button 
+                    onClick={() => router.push('/staqs')}
+                    className="flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
+                  >
+                    <ArrowLeft className="h-4 w-4 mr-2" />
+                    Back to Staqs
+                  </button>
+                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                    <p className="font-medium text-sm">{selectedStaq?.name}</p>
+                    <p className="text-xs text-gray-500">
+                      {new Intl.NumberFormat('en-NG', {
+                        style: 'currency',
+                        currency: 'NGN'
+                      }).format(selectedStaq?.balance || 0)}
+                    </p>
+                  </div>
+                </div>
+              )}
+              
+              <Navigation items={currentNavItems} />
+            </div>
+          </div>
+        </div>
+
+        {/* Mobile Sidebar Overlay */}
+        {sidebarOpen && (
+          <div className="fixed inset-0 z-50 md:hidden">
+            <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
+            <div className="relative w-64 h-full bg-white">
+              <div className="flex items-center justify-between px-6 py-6 border-b border-gray-200">
+                <div className="flex items-center">
+                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
+                    <Wallet className="h-5 w-5 text-white" />
+                  </div>
+                  <span className="text-xl font-bold text-gray-900">Staq</span>
+                </div>
+                <button onClick={() => setSidebarOpen(false)}>
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+              
+              <div className="px-4 py-6">
+                {isStaqPage && (
+                  <div className="mb-6">
+                    <button 
+                      onClick={() => {
+                        router.push('/staqs');
+                        setSidebarOpen(false);
+                      }}
+                      className="flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
+                    >
+                      <ArrowLeft className="h-4 w-4 mr-2" />
+                      Back to Staqs
+                    </button>
+                    <div className="bg-gray-50 rounded-lg p-3 mb-4">
+                      <p className="font-medium text-sm">{selectedStaq?.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {new Intl.NumberFormat('en-NG', {
+                          style: 'currency',
+                          currency: 'NGN'
+                        }).format(selectedStaq?.balance || 0)}
+                      </p>
+                    </div>
+                  </div>
+                )}
+                
+                <Navigation items={currentNavItems} />
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Main Content */}
+        <div className="flex-1 flex flex-col">
+          <Header />
+          
+          <main className="flex-1 overflow-auto pb-20 md:pb-0">
+            {children}
+          </main>
+
+          {/* Mobile Bottom Navigation */}
+          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
+            <Navigation items={currentNavItems} mobile={true} />
+          </div>
+        </div>
+      </div>
+    </AppContext.Provider>
+      </body>
+    </html>
+  );
+}
