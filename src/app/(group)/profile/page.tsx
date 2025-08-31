@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { useAppContext } from "../layout";
+import { useAppContext } from "../../layout";
 import {
   Edit,
   Shield,

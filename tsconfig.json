@@ -28,8 +28,8 @@
     "**/*.tsx",
     ".next/types/**/*.ts",
     "tailwind.config.js",
-    "src/app/staqs",
-    "src/app/staqs/[id]"
+    "src/app/(group)/staqs",
+    "src/app/(group)/staqs/[id]"
   ],
   "exclude": ["node_modules"]
 }

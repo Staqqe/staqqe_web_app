@@ -13,13 +13,13 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
-import { useAppContext } from "../layout";
+import { useAppContext } from "../../layout";
 // import { useAppContext } from "@/app/layout";
 
 export default function StaqsTransactionsPage() {
   const router = useRouter();
   const { transactions } = useAppContext();
-  console.log(transactions,"uiui")
+  console.log(transactions, "uiui");
   const [searchTerm, setSearchTerm] = useState("");
   const [filterType, setFilterType] = useState("all");
   const [showFilterModal, setShowFilterModal] = useState(false);

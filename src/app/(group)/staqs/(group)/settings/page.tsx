@@ -165,7 +165,7 @@ export default function StaqSettingsPage() {
       <div>
         <h2 className="text-lg font-semibold">Staqs Settings</h2>
         <p className="text-sm text-gray-500">
-          Manage  General Staq settings and preferences
+          Manage General Staq settings and preferences
         </p>
       </div>
 

@@ -1,49 +1,49 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 // import { useAppContext } from './layout';
-import { 
-  Send, 
-  Download, 
-  Users, 
-  Plus, 
+import {
+  Send,
+  Download,
+  Users,
+  Plus,
   ArrowRight,
   X,
   Target,
   Calendar,
-  DollarSign
-} from 'lucide-react';
-import { useAppContext } from './layout';
+  DollarSign,
+} from "lucide-react";
+import { useAppContext } from "../layout";
 
 export default function HomePage() {
   const router = useRouter();
   const { user, transactions, addStaq } = useAppContext();
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    goal: '',
-    duration: '12',
-    contributionType: 'flexible'
+    name: "",
+    description: "",
+    goal: "",
+    duration: "12",
+    contributionType: "flexible",
   });
 
   // Format currency
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN'
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
     }).format(amount);
   };
 
   // Format date
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-NG', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-NG", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -59,26 +59,26 @@ export default function HomePage() {
       isAdmin: true,
       created: new Date().toISOString(),
       duration: parseInt(formData.duration),
-      contributionType: formData.contributionType
+      contributionType: formData.contributionType,
     };
-    
+
     addStaq(newStaq);
     setShowCreateModal(false);
     setFormData({
-      name: '',
-      description: '',
-      goal: '',
-      duration: '12',
-      contributionType: 'flexible'
+      name: "",
+      description: "",
+      goal: "",
+      duration: "12",
+      contributionType: "flexible",
     });
-    router.push('/staqs');
+    router.push("/staqs");
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -87,7 +87,9 @@ export default function HomePage() {
       {/* Balance Card */}
       <div className="bg-gradient-to-r from-blue-600 to-blue-800 rounded-2xl p-6 text-white">
         <h2 className="text-lg font-medium mb-2">Total Balance</h2>
-        <p className="text-3xl font-bold mb-4">{formatCurrency(user.balance)}</p>
+        <p className="text-3xl font-bold mb-4">
+          {formatCurrency(user.balance)}
+        </p>
         <div className="flex space-x-3">
           <button className="bg-white bg-opacity-20 backdrop-blur px-4 py-2 rounded-lg flex items-center hover:bg-opacity-30 transition-all">
             <Send className="h-4 w-4 mr-2" />
@@ -106,14 +108,14 @@ export default function HomePage() {
           <h3 className="text-lg font-semibold">Quick Actions</h3>
         </div>
         <div className="grid grid-cols-2 gap-4">
-          <button 
-            onClick={() => router.push('/staqs')}
+          <button
+            onClick={() => router.push("/staqs")}
             className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center hover:shadow-md transition-shadow"
           >
             <Users className="h-8 w-8 text-blue-600 mb-2" />
             <span className="font-medium">My Staqs</span>
           </button>
-          <button 
+          <button
             onClick={() => setShowCreateModal(true)}
             className="bg-white p-4 rounded-xl border border-gray-200 flex flex-col items-center hover:shadow-md transition-shadow"
           >
@@ -127,8 +129,8 @@ export default function HomePage() {
       <div>
         <div className="flex justify-between items-center mb-4">
           <h3 className="text-lg font-semibold">Recent Activity</h3>
-          <button 
-            onClick={() => router.push('/transactions')}
+          <button
+            onClick={() => router.push("/transactions")}
             className="text-blue-600 text-sm hover:text-blue-800"
           >
             See all
@@ -136,24 +138,38 @@ export default function HomePage() {
         </div>
         <div className="space-y-3">
           {transactions.slice(0, 3).map((transaction) => (
-            <div key={transaction.id} className="bg-white p-4 rounded-xl border border-gray-200 hover:shadow-sm transition-shadow">
+            <div
+              key={transaction.id}
+              className="bg-white p-4 rounded-xl border border-gray-200 hover:shadow-sm transition-shadow"
+            >
               <div className="flex justify-between items-start">
                 <div className="flex-1">
                   <p className="font-medium capitalize">{transaction.type}</p>
-                  <p className="text-sm text-gray-500">{transaction.from} → {transaction.to}</p>
-                  <p className="text-xs text-gray-400">{formatDate(transaction.date)}</p>
+                  <p className="text-sm text-gray-500">
+                    {transaction.from} → {transaction.to}
+                  </p>
+                  <p className="text-xs text-gray-400">
+                    {formatDate(transaction.date)}
+                  </p>
                 </div>
                 <div className="text-right">
-                  <p className={`font-semibold ${
-                    transaction.type === 'deposit' ? 'text-green-600' : 'text-red-600'
-                  }`}>
-                    {transaction.type === 'deposit' ? '+' : '-'}{formatCurrency(transaction.amount)}
+                  <p
+                    className={`font-semibold ${
+                      transaction.type === "deposit"
+                        ? "text-green-600"
+                        : "text-red-600"
+                    }`}
+                  >
+                    {transaction.type === "deposit" ? "+" : "-"}
+                    {formatCurrency(transaction.amount)}
                   </p>
-                  <span className={`text-xs px-2 py-1 rounded-full ${
-                    transaction.status === 'completed' 
-                      ? 'bg-green-100 text-green-600'
-                      : 'bg-yellow-100 text-yellow-600'
-                  }`}>
+                  <span
+                    className={`text-xs px-2 py-1 rounded-full ${
+                      transaction.status === "completed"
+                        ? "bg-green-100 text-green-600"
+                        : "bg-yellow-100 text-yellow-600"
+                    }`}
+                  >
                     {transaction.status}
                   </span>
                 </div>
@@ -173,7 +189,9 @@ export default function HomePage() {
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Available Balance</span>
-            <span className="font-medium text-green-600">{formatCurrency(user.balance)}</span>
+            <span className="font-medium text-green-600">
+              {formatCurrency(user.balance)}
+            </span>
           </div>
           <div className="flex justify-between">
             <span className="text-gray-600">Account Type</span>
@@ -190,7 +208,7 @@ export default function HomePage() {
               {/* Modal Header */}
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">Create New Staq</h2>
-                <button 
+                <button
                   onClick={() => setShowCreateModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-full"
                 >
@@ -281,13 +299,15 @@ export default function HomePage() {
                         type="radio"
                         name="contributionType"
                         value="flexible"
-                        checked={formData.contributionType === 'flexible'}
+                        checked={formData.contributionType === "flexible"}
                         onChange={handleInputChange}
                         className="mr-3"
                       />
                       <div>
                         <p className="font-medium">Flexible</p>
-                        <p className="text-xs text-gray-500">Any amount, anytime</p>
+                        <p className="text-xs text-gray-500">
+                          Any amount, anytime
+                        </p>
                       </div>
                     </label>
                     <label className="flex items-center p-3 border border-gray-300 rounded-lg cursor-pointer hover:bg-gray-50">
@@ -295,13 +315,15 @@ export default function HomePage() {
                         type="radio"
                         name="contributionType"
                         value="fixed"
-                        checked={formData.contributionType === 'fixed'}
+                        checked={formData.contributionType === "fixed"}
                         onChange={handleInputChange}
                         className="mr-3"
                       />
                       <div>
                         <p className="font-medium">Fixed</p>
-                        <p className="text-xs text-gray-500">Set monthly amount</p>
+                        <p className="text-xs text-gray-500">
+                          Set monthly amount
+                        </p>
                       </div>
                     </label>
                   </div>

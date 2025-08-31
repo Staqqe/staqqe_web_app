@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useAppContext } from "../../layout";
+import { useAppContext } from "../../../layout";
 import {
   Plus,
   TrendingUp,
@@ -134,7 +134,9 @@ export default function StaqOverviewPage() {
     e.preventDefault();
     const amount = parseFloat(withdrawAmount);
     if (amount > 0 && amount <= selectedStaq.balance) {
-      console.log(`Requesting withdrawal of ${amount} from ${selectedStaq.name}. Reason: ${withdrawReason}`);
+      console.log(
+        `Requesting withdrawal of ${amount} from ${selectedStaq.name}. Reason: ${withdrawReason}`
+      );
       // Create withdrawal request here
       setShowWithdrawModal(false);
       setWithdrawAmount("");
@@ -200,7 +202,9 @@ export default function StaqOverviewPage() {
       {userWithdrawableAmount > 0 && (
         <div className="bg-gradient-to-r from-purple-50 to-pink-50 p-4 rounded-xl border border-purple-200">
           <div className="flex items-center justify-between mb-2">
-            <span className="text-purple-700 text-sm font-medium">Your Withdrawable Amount</span>
+            <span className="text-purple-700 text-sm font-medium">
+              Your Withdrawable Amount
+            </span>
             <DollarSign className="h-4 w-4 text-purple-600" />
           </div>
           <p className="text-lg font-bold text-purple-600 mb-3">
@@ -235,7 +239,11 @@ export default function StaqOverviewPage() {
               onClick={() => setShowAccountDetails(!showAccountDetails)}
               className="text-blue-600 p-2 hover:bg-blue-50 rounded-lg transition-colors"
             >
-              {showAccountDetails ? <EyeOff className="h-4 w-4" /> : <Eye className="h-4 w-4" />}
+              {showAccountDetails ? (
+                <EyeOff className="h-4 w-4" />
+              ) : (
+                <Eye className="h-4 w-4" />
+              )}
             </button>
           </div>
 
@@ -243,19 +251,27 @@ export default function StaqOverviewPage() {
             <div className="space-y-3 bg-gray-50 p-4 rounded-lg">
               <div className="flex justify-between">
                 <span className="text-gray-600 text-sm">Bank Name</span>
-                <span className="font-medium text-sm">{accountDetails.bankName}</span>
+                <span className="font-medium text-sm">
+                  {accountDetails.bankName}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 text-sm">Account Number</span>
-                <span className="font-mono font-medium text-sm">{accountDetails.accountNumber}</span>
+                <span className="font-mono font-medium text-sm">
+                  {accountDetails.accountNumber}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 text-sm">Account Name</span>
-                <span className="font-medium text-sm text-right">{accountDetails.accountName}</span>
+                <span className="font-medium text-sm text-right">
+                  {accountDetails.accountName}
+                </span>
               </div>
               <div className="flex justify-between">
                 <span className="text-gray-600 text-sm">Routing Number</span>
-                <span className="font-mono font-medium text-sm">{accountDetails.routingNumber}</span>
+                <span className="font-mono font-medium text-sm">
+                  {accountDetails.routingNumber}
+                </span>
               </div>
             </div>
           )}
@@ -290,10 +306,17 @@ export default function StaqOverviewPage() {
                 Withdrawal Requests
               </h3>
               <button
-                onClick={() => setShowWithdrawalRequests(!showWithdrawalRequests)}
+                onClick={() =>
+                  setShowWithdrawalRequests(!showWithdrawalRequests)
+                }
                 className="text-blue-600 text-sm hover:text-blue-800"
               >
-                {showWithdrawalRequests ? "Hide" : "Show"} ({withdrawalRequests.filter(r => r.status === 'pending').length} pending)
+                {showWithdrawalRequests ? "Hide" : "Show"} (
+                {
+                  withdrawalRequests.filter((r) => r.status === "pending")
+                    .length
+                }{" "}
+                pending)
               </button>
             </div>
           </div>
@@ -306,26 +329,36 @@ export default function StaqOverviewPage() {
                     <div>
                       <p className="font-medium">{request.user}</p>
                       <p className="text-sm text-gray-600">{request.reason}</p>
-                      <p className="text-xs text-gray-500">{formatDate(request.date)}</p>
+                      <p className="text-xs text-gray-500">
+                        {formatDate(request.date)}
+                      </p>
                     </div>
                     <div className="text-right">
-                      <p className="font-bold text-lg">{formatCurrency(request.amount)}</p>
-                      <span className={`text-xs px-2 py-1 rounded-full ${
-                        request.status === 'pending' ? 'bg-yellow-100 text-yellow-800' :
-                        request.status === 'approved' ? 'bg-green-100 text-green-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
+                      <p className="font-bold text-lg">
+                        {formatCurrency(request.amount)}
+                      </p>
+                      <span
+                        className={`text-xs px-2 py-1 rounded-full ${
+                          request.status === "pending"
+                            ? "bg-yellow-100 text-yellow-800"
+                            : request.status === "approved"
+                            ? "bg-green-100 text-green-800"
+                            : "bg-red-100 text-red-800"
+                        }`}
+                      >
                         {request.status}
                       </span>
                     </div>
                   </div>
-                  
+
                   <div className="text-xs text-gray-500 mb-3">
-                    Approvals: {request.approvals.length}/{request.required_approvals} 
-                    {request.approvals.length > 0 && ` (${request.approvals.join(', ')})`}
+                    Approvals: {request.approvals.length}/
+                    {request.required_approvals}
+                    {request.approvals.length > 0 &&
+                      ` (${request.approvals.join(", ")})`}
                   </div>
 
-                  {request.status === 'pending' && (
+                  {request.status === "pending" && (
                     <div className="flex gap-2">
                       <button
                         onClick={() => handleApproveWithdrawal(request.id)}
@@ -396,11 +429,19 @@ export default function StaqOverviewPage() {
                   <div>
                     <p className="font-medium">
                       {activity.type === "contribution"
-                        ? `${activity.user} contributed ${formatCurrency(activity.amount)}`
+                        ? `${activity.user} contributed ${formatCurrency(
+                            activity.amount
+                          )}`
                         : activity.type === "withdrawal_approved"
-                        ? `${activity.user}'s withdrawal of ${formatCurrency(activity.amount)} was approved`
+                        ? `${activity.user}'s withdrawal of ${formatCurrency(
+                            activity.amount
+                          )} was approved`
                         : activity.type === "withdrawal_request"
-                        ? `${activity.user} requested withdrawal of ${formatCurrency(activity.amount)}`
+                        ? `${
+                            activity.user
+                          } requested withdrawal of ${formatCurrency(
+                            activity.amount
+                          )}`
                         : `${activity.user} joined the staq`}
                     </p>
                     <p className="text-sm text-gray-500 flex items-center">
@@ -410,12 +451,17 @@ export default function StaqOverviewPage() {
                   </div>
                 </div>
                 {activity.amount && (
-                  <span className={`font-semibold ${
-                    activity.type === "contribution" ? "text-green-600" :
-                    activity.type === "withdrawal_approved" ? "text-purple-600" :
-                    "text-orange-600"
-                  }`}>
-                    {activity.type === "contribution" ? "+" : "-"}{formatCurrency(activity.amount)}
+                  <span
+                    className={`font-semibold ${
+                      activity.type === "contribution"
+                        ? "text-green-600"
+                        : activity.type === "withdrawal_approved"
+                        ? "text-purple-600"
+                        : "text-orange-600"
+                    }`}
+                  >
+                    {activity.type === "contribution" ? "+" : "-"}
+                    {formatCurrency(activity.amount)}
                   </span>
                 )}
               </div>
@@ -618,7 +664,8 @@ export default function StaqOverviewPage() {
 
                 <div className="bg-orange-50 p-4 rounded-lg">
                   <p className="text-sm text-orange-700">
-                    <strong>Note:</strong> Your withdrawal request will need approval from other admins before you can access the funds.
+                    <strong>Note:</strong> Your withdrawal request will need
+                    approval from other admins before you can access the funds.
                   </p>
                 </div>
 

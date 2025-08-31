@@ -198,154 +198,17 @@ export default function RootLayout({ children }) {
     </nav>
   );
 
-  // Header component
-  const Header = () => (
-    <header className="bg-white border-b border-gray-200 px-4 py-4">
-      <div className="flex items-center justify-between">
-        <div className="flex items-center">
-          {isStaqPage ? (
-            <button 
-              onClick={() => router.push('/staqs')} 
-              className="mr-4 p-1"
-            >
-              <ArrowLeft className="h-6 w-6" />
-            </button>
-          ) : (
-            <button 
-              onClick={() => setSidebarOpen(true)} 
-              className="md:hidden mr-4 p-1"
-            >
-              <Menu className="h-6 w-6" />
-            </button>
-          )}
-          <h1 className="text-xl font-semibold text-gray-900">{getPageTitle()}</h1>
-        </div>
-        <div className="flex items-center space-x-4">
-          <Bell className="h-6 w-6 text-gray-500" />
-          <div className="w-8 h-8 bg-blue-600 rounded-full flex items-center justify-center">
-            <span className="text-white text-sm font-medium">{user.avatar}</span>
-          </div>
-        </div>
-      </div>
-    </header>
-  );
+
+  
 
   return (
     <html>
       <body>
 
 
-    <AppContext.Provider value={{
-      user,
-      selectedStaq,
-      setSelectedStaq,
-      staqs,
-      requests,
-      transactions
-    }}>
-      <div className="min-h-screen bg-gray-50 flex">
-        {/* Desktop Sidebar */}
-        <div className="hidden md:flex md:w-64 md:flex-col">
-          <div className="flex-1 flex flex-col bg-white border-r border-gray-200">
-            <div className="flex items-center px-6 py-6 border-b border-gray-200">
-              <div className="flex items-center">
-                <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                  <Wallet className="h-5 w-5 text-white" />
-                </div>
-                <span className="text-xl font-bold text-gray-900">Staq</span>
-              </div>
-            </div>
-            
-            <div className="flex-1 px-4 py-6">
-              {isStaqPage && (
-                <div className="mb-6">
-                  <button 
-                    onClick={() => router.push('/staqs')}
-                    className="flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
-                  >
-                    <ArrowLeft className="h-4 w-4 mr-2" />
-                    Back to Staqs
-                  </button>
-                  <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                    <p className="font-medium text-sm">{selectedStaq?.name}</p>
-                    <p className="text-xs text-gray-500">
-                      {new Intl.NumberFormat('en-NG', {
-                        style: 'currency',
-                        currency: 'NGN'
-                      }).format(selectedStaq?.balance || 0)}
-                    </p>
-                  </div>
-                </div>
-              )}
-              
-              <Navigation items={currentNavItems} />
-            </div>
-          </div>
-        </div>
-
-        {/* Mobile Sidebar Overlay */}
-        {sidebarOpen && (
-          <div className="fixed inset-0 z-50 md:hidden">
-            <div className="absolute inset-0 bg-black bg-opacity-50" onClick={() => setSidebarOpen(false)} />
-            <div className="relative w-64 h-full bg-white">
-              <div className="flex items-center justify-between px-6 py-6 border-b border-gray-200">
-                <div className="flex items-center">
-                  <div className="w-8 h-8 bg-blue-600 rounded-lg flex items-center justify-center mr-3">
-                    <Wallet className="h-5 w-5 text-white" />
-                  </div>
-                  <span className="text-xl font-bold text-gray-900">Staq</span>
-                </div>
-                <button onClick={() => setSidebarOpen(false)}>
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
-              
-              <div className="px-4 py-6">
-                {isStaqPage && (
-                  <div className="mb-6">
-                    <button 
-                      onClick={() => {
-                        router.push('/staqs');
-                        setSidebarOpen(false);
-                      }}
-                      className="flex items-center text-sm text-gray-600 hover:text-gray-900 mb-4"
-                    >
-                      <ArrowLeft className="h-4 w-4 mr-2" />
-                      Back to Staqs
-                    </button>
-                    <div className="bg-gray-50 rounded-lg p-3 mb-4">
-                      <p className="font-medium text-sm">{selectedStaq?.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {new Intl.NumberFormat('en-NG', {
-                          style: 'currency',
-                          currency: 'NGN'
-                        }).format(selectedStaq?.balance || 0)}
-                      </p>
-                    </div>
-                  </div>
-                )}
-                
-                <Navigation items={currentNavItems} />
-              </div>
-            </div>
-          </div>
-        )}
-
-        {/* Main Content */}
-        <div className="flex-1 flex flex-col">
-          <Header />
-          
-          <main className="flex-1 overflow-auto pb-20 md:pb-0">
+   <main className="flex-1 overflow-auto pb-20 md:pb-0">
             {children}
           </main>
-
-          {/* Mobile Bottom Navigation */}
-          <div className="md:hidden fixed bottom-0 left-0 right-0 bg-white border-t border-gray-200">
-            <Navigation items={currentNavItems} mobile={true} />
-          </div>
-        </div>
-      </div>
-    </AppContext.Provider>
       </body>
     </html>
   );

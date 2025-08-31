@@ -35,7 +35,7 @@ export default function StaqOverviewLayout({ children }) {
       </div>
     );
   }
-let baseurl = `/staqs/${selectedStaq.id}`
+  let baseurl = `/staqs/${selectedStaq.id}`;
   const navigationItems = [
     {
       id: "overview",
@@ -43,24 +43,29 @@ let baseurl = `/staqs/${selectedStaq.id}`
       icon: BarChart3,
       path: baseurl,
     },
-    { id: "members", label: "Members", icon: Users, path:baseurl + "/members" },
+    {
+      id: "members",
+      label: "Members",
+      icon: Users,
+      path: baseurl + "/members",
+    },
     {
       id: "transactions",
       label: "Transactions",
       icon: Receipt,
-      path:baseurl + "/transactions",
+      path: baseurl + "/transactions",
     },
     {
       id: "requests",
       label: "Requests",
       icon: MessageSquare,
-      path:baseurl+ "/requests",
+      path: baseurl + "/requests",
     },
     {
       id: "settings",
       label: "Settings",
       icon: Settings,
-      path:baseurl+ "/settings",
+      path: baseurl + "/settings",
     },
   ];
 

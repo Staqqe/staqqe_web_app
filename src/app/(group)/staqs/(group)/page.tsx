@@ -3,11 +3,11 @@
 // import React, { useState } from 'react';
 // import { useRouter } from 'next/navigation';
 // import { useAppContext } from '../layout';
-// import { 
-//   Plus, 
-//   ArrowRight, 
-//   Users, 
-//   Target, 
+// import {
+//   Plus,
+//   ArrowRight,
+//   Users,
+//   Target,
 //   Calendar,
 //   Search,
 //   Filter,
@@ -42,7 +42,7 @@
 //   const filteredStaqs = staqs.filter(staq => {
 //     const matchesSearch = staq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
 //                          staq.description.toLowerCase().includes(searchTerm.toLowerCase());
-//     const matchesFilter = filterType === 'all' || 
+//     const matchesFilter = filterType === 'all' ||
 //                          (filterType === 'admin' && staq.isAdmin) ||
 //                          (filterType === 'member' && !staq.isAdmin);
 //     return matchesSearch && matchesFilter;
@@ -72,8 +72,8 @@
 //         <div className="flex items-center space-x-3 mb-4">
 //           <div className="flex-1 relative">
 //             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-//             <input 
-//               type="text" 
+//             <input
+//               type="text"
 //               placeholder="Search staqs..."
 //               value={searchTerm}
 //               onChange={(e) => setSearchTerm(e.target.value)}
@@ -134,8 +134,8 @@
 //       <div className="space-y-4">
 //         {filteredStaqs.length > 0 ? (
 //           filteredStaqs.map((staq) => (
-//             <div 
-//               key={staq.id} 
+//             <div
+//               key={staq.id}
 //               onClick={() => handleStaqClick(staq)}
 //               className="bg-white p-6 rounded-2xl border border-gray-200 cursor-pointer hover:shadow-md transition-all duration-200 hover:border-blue-200"
 //             >
@@ -164,27 +164,27 @@
 //                 </div>
 //                 <ArrowRight className="h-5 w-5 text-gray-400 mt-2" />
 //               </div>
-              
+
 //               <div className="space-y-3">
 //                 <div className="flex justify-between items-center">
 //                   <span className="text-gray-600 text-sm">Current Balance</span>
 //                   <span className="font-semibold text-lg">{formatCurrency(staq.balance)}</span>
 //                 </div>
-                
+
 //                 <div className="flex justify-between items-center">
 //                   <span className="text-gray-600 text-sm">Target Goal</span>
 //                   <span className="font-medium text-gray-900">{formatCurrency(staq.goal)}</span>
 //                 </div>
-                
+
 //                 {/* Progress Bar */}
 //                 <div className="space-y-2">
 //                   <div className="w-full bg-gray-200 rounded-full h-3">
-//                     <div 
-//                       className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300" 
+//                     <div
+//                       className="bg-gradient-to-r from-blue-500 to-blue-600 h-3 rounded-full transition-all duration-300"
 //                       style={{ width: `${Math.min((staq.balance / staq.goal) * 100, 100)}%` }}
 //                     ></div>
 //                   </div>
-                  
+
 //                   <div className="flex justify-between text-sm">
 //                     <span className="text-gray-500">
 //                       {Math.round((staq.balance / staq.goal) * 100)}% achieved
@@ -229,16 +229,15 @@
 //   );
 // }
 
+"use client";
 
-'use client';
-
-import React, { useState } from 'react';
-import { useRouter } from 'next/navigation';
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
 // import { useAppContext } from '../layout';
-import { 
-  Plus, 
-  ArrowRight, 
-  Users, 
+import {
+  Plus,
+  ArrowRight,
+  Users,
   Calendar,
   Search,
   Filter,
@@ -248,59 +247,65 @@ import {
   Copy,
   Eye,
   EyeOff,
-  X
-} from 'lucide-react';
-import { useAppContext } from '@/app/layout';
+  X,
+} from "lucide-react";
+import { useAppContext } from "@/app/layout";
 
 export default function StaqsOverviewPage() {
   const router = useRouter();
   const { staqs, setSelectedStaq, addStaq } = useAppContext();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterType, setFilterType] = useState('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterType, setFilterType] = useState("all");
   const [showCreateModal, setShowCreateModal] = useState(false);
   const [showBalances, setShowBalances] = useState(true);
   const [formData, setFormData] = useState({
-    name: '',
-    description: '',
-    initialDeposit: ''
+    name: "",
+    description: "",
+    initialDeposit: "",
   });
 
   // Format currency
   const formatCurrency = (amount) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
-      currency: 'NGN'
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
     }).format(amount);
   };
 
   // Format date
   const formatDate = (dateString) => {
-    return new Date(dateString).toLocaleDateString('en-NG', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-NG", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   // Filter staqs
-  const filteredStaqs = staqs.filter(staq => {
-    const matchesSearch = staq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         staq.description.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesFilter = filterType === 'all' || 
-                         (filterType === 'admin' && staq.isAdmin) ||
-                         (filterType === 'member' && !staq.isAdmin);
+  const filteredStaqs = staqs.filter((staq) => {
+    const matchesSearch =
+      staq.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      staq.description.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesFilter =
+      filterType === "all" ||
+      (filterType === "admin" && staq.isAdmin) ||
+      (filterType === "member" && !staq.isAdmin);
     return matchesSearch && matchesFilter;
   });
 
   const handleStaqClick = (staq) => {
     setSelectedStaq(staq);
-    router.push('/staq/overview');
+    router.push("/staq/overview");
   };
 
   const handleCreateStaq = (e) => {
     e.preventDefault();
-    const accountNumber = '30' + Math.floor(Math.random() * 100000000).toString().padStart(8, '0');
-    
+    const accountNumber =
+      "30" +
+      Math.floor(Math.random() * 100000000)
+        .toString()
+        .padStart(8, "0");
+
     const newStaq = {
       id: Date.now(),
       name: formData.name,
@@ -310,24 +315,24 @@ export default function StaqsOverviewPage() {
       isAdmin: true,
       created: new Date().toISOString(),
       accountNumber: accountNumber,
-      bankCode: 'STQ',
-      walletType: 'shared'
+      bankCode: "STQ",
+      walletType: "shared",
     };
-    
+
     addStaq(newStaq);
     setShowCreateModal(false);
     setFormData({
-      name: '',
-      description: '',
-      initialDeposit: ''
+      name: "",
+      description: "",
+      initialDeposit: "",
     });
   };
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
   };
 
@@ -337,7 +342,7 @@ export default function StaqsOverviewPage() {
   };
 
   const totalBalance = staqs.reduce((sum, staq) => sum + staq.balance, 0);
-  const adminStaqs = staqs.filter(staq => staq.isAdmin).length;
+  const adminStaqs = staqs.filter((staq) => staq.isAdmin).length;
 
   return (
     <div className="p-4 space-y-6">
@@ -347,7 +352,7 @@ export default function StaqsOverviewPage() {
           <h2 className="text-lg font-semibold">My Shared Wallets</h2>
           <p className="text-sm text-gray-500">{staqs.length} active wallets</p>
         </div>
-        <button 
+        <button
           onClick={() => setShowCreateModal(true)}
           className="bg-blue-600 text-white px-4 py-2 rounded-lg flex items-center hover:bg-blue-700 transition-colors"
         >
@@ -363,16 +368,20 @@ export default function StaqsOverviewPage() {
             <span className="text-gray-600 text-sm">Total in Wallets</span>
             <div className="flex items-center space-x-2">
               <Wallet className="h-4 w-4 text-blue-500" />
-              <button 
+              <button
                 onClick={() => setShowBalances(!showBalances)}
                 className="p-1 hover:bg-gray-100 rounded"
               >
-                {showBalances ? <EyeOff className="h-3 w-3 text-gray-400" /> : <Eye className="h-3 w-3 text-gray-400" />}
+                {showBalances ? (
+                  <EyeOff className="h-3 w-3 text-gray-400" />
+                ) : (
+                  <Eye className="h-3 w-3 text-gray-400" />
+                )}
               </button>
             </div>
           </div>
           <p className="text-lg font-bold text-blue-600">
-            {showBalances ? formatCurrency(totalBalance) : '••••••••'}
+            {showBalances ? formatCurrency(totalBalance) : "••••••••"}
           </p>
         </div>
 
@@ -381,9 +390,7 @@ export default function StaqsOverviewPage() {
             <span className="text-gray-600 text-sm">Admin Roles</span>
             <Crown className="h-4 w-4 text-yellow-500" />
           </div>
-          <p className="text-lg font-bold text-yellow-600">
-            {adminStaqs}
-          </p>
+          <p className="text-lg font-bold text-yellow-600">{adminStaqs}</p>
         </div>
       </div>
 
@@ -392,8 +399,8 @@ export default function StaqsOverviewPage() {
         <div className="flex items-center space-x-3 mb-4">
           <div className="flex-1 relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
-            <input 
-              type="text" 
+            <input
+              type="text"
               placeholder="Search wallets..."
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
@@ -408,17 +415,17 @@ export default function StaqsOverviewPage() {
         {/* Filter Tabs */}
         <div className="flex space-x-2">
           {[
-            { id: 'all', label: 'All Wallets' },
-            { id: 'admin', label: 'Admin' },
-            { id: 'member', label: 'Member' }
+            { id: "all", label: "All Wallets" },
+            { id: "admin", label: "Admin" },
+            { id: "member", label: "Member" },
           ].map((filter) => (
             <button
               key={filter.id}
               onClick={() => setFilterType(filter.id)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-colors ${
                 filterType === filter.id
-                  ? 'bg-blue-100 text-blue-600'
-                  : 'text-gray-500 hover:text-gray-700 hover:bg-gray-50'
+                  ? "bg-blue-100 text-blue-600"
+                  : "text-gray-500 hover:text-gray-700 hover:bg-gray-50"
               }`}
             >
               {filter.label}
@@ -431,8 +438,8 @@ export default function StaqsOverviewPage() {
       <div className="space-y-4">
         {filteredStaqs.length > 0 ? (
           filteredStaqs.map((staq) => (
-            <div 
-              key={staq.id} 
+            <div
+              key={staq.id}
               onClick={() => handleStaqClick(staq)}
               className="bg-white p-6 rounded-2xl border border-gray-200 cursor-pointer hover:shadow-md transition-all duration-200 hover:border-blue-200"
             >
@@ -447,7 +454,9 @@ export default function StaqsOverviewPage() {
                       </div>
                     )}
                   </div>
-                  <p className="text-sm text-gray-500 mb-2">{staq.description}</p>
+                  <p className="text-sm text-gray-500 mb-2">
+                    {staq.description}
+                  </p>
                   <div className="flex items-center space-x-4 text-xs text-gray-400">
                     <div className="flex items-center">
                       <Users className="h-3 w-3 mr-1" />
@@ -461,20 +470,22 @@ export default function StaqsOverviewPage() {
                 </div>
                 <ArrowRight className="h-5 w-5 text-gray-400 mt-2" />
               </div>
-              
+
               <div className="space-y-3">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-sm">Wallet Balance</span>
                   <span className="font-semibold text-lg">
-                    {showBalances ? formatCurrency(staq.balance) : '••••••••'}
+                    {showBalances ? formatCurrency(staq.balance) : "••••••••"}
                   </span>
                 </div>
-                
+
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600 text-sm">Account Number</span>
                   <div className="flex items-center space-x-2">
-                    <span className="font-medium text-gray-900">{staq.accountNumber}</span>
-                    <button 
+                    <span className="font-medium text-gray-900">
+                      {staq.accountNumber}
+                    </span>
+                    <button
                       onClick={(e) => {
                         e.stopPropagation();
                         copyAccountNumber(staq.accountNumber);
@@ -485,11 +496,13 @@ export default function StaqsOverviewPage() {
                     </button>
                   </div>
                 </div>
-                
+
                 <div className="bg-gray-50 p-3 rounded-lg">
                   <div className="flex justify-between text-sm">
                     <span className="text-gray-600">Wallet Type</span>
-                    <span className="font-medium text-gray-800 capitalize">{staq.walletType || 'Shared'}</span>
+                    <span className="font-medium text-gray-800 capitalize">
+                      {staq.walletType || "Shared"}
+                    </span>
                   </div>
                 </div>
               </div>
@@ -501,8 +514,10 @@ export default function StaqsOverviewPage() {
               <Wallet className="h-8 w-8 text-gray-400" />
             </div>
             <p className="text-gray-500 mb-2">No shared wallets found</p>
-            <p className="text-sm text-gray-400 mb-4">Try adjusting your search criteria or create a new wallet</p>
-            <button 
+            <p className="text-sm text-gray-400 mb-4">
+              Try adjusting your search criteria or create a new wallet
+            </p>
+            <button
               onClick={() => setShowCreateModal(true)}
               className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -517,10 +532,14 @@ export default function StaqsOverviewPage() {
         <div className="bg-gradient-to-r from-blue-50 to-blue-100 p-6 rounded-2xl border border-blue-200">
           <div className="flex items-center justify-between">
             <div>
-              <h3 className="font-semibold text-blue-900 mb-1">Create New Shared Wallet</h3>
-              <p className="text-sm text-blue-700">Start a new wallet with friends and family</p>
+              <h3 className="font-semibold text-blue-900 mb-1">
+                Create New Shared Wallet
+              </h3>
+              <p className="text-sm text-blue-700">
+                Start a new wallet with friends and family
+              </p>
             </div>
-            <button 
+            <button
               onClick={() => setShowCreateModal(true)}
               className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors"
             >
@@ -537,7 +556,7 @@ export default function StaqsOverviewPage() {
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
                 <h2 className="text-xl font-semibold">Create Shared Wallet</h2>
-                <button 
+                <button
                   onClick={() => setShowCreateModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-full"
                 >
@@ -595,8 +614,9 @@ export default function StaqsOverviewPage() {
 
                 <div className="bg-blue-50 p-4 rounded-lg">
                   <p className="text-sm text-blue-700">
-                    <strong>Note:</strong> You will be the admin of this wallet. 
-                    You can add members and manage spending approvals after creation.
+                    <strong>Note:</strong> You will be the admin of this wallet.
+                    You can add members and manage spending approvals after
+                    creation.
                   </p>
                 </div>
 
