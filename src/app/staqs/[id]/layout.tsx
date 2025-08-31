@@ -35,32 +35,32 @@ export default function StaqOverviewLayout({ children }) {
       </div>
     );
   }
-
+let baseurl = `/staqs/${selectedStaq.id}`
   const navigationItems = [
     {
       id: "overview",
       label: "Overview",
       icon: BarChart3,
-      path: "/staq/overview",
+      path: baseurl,
     },
-    { id: "members", label: "Members", icon: Users, path: "/staq/members" },
+    { id: "members", label: "Members", icon: Users, path:baseurl + "/members" },
     {
       id: "transactions",
       label: "Transactions",
       icon: Receipt,
-      path: "/staq/transactions",
+      path:baseurl + "/transactions",
     },
     {
       id: "requests",
       label: "Requests",
       icon: MessageSquare,
-      path: "/staq/requests",
+      path:baseurl+ "/requests",
     },
     {
       id: "settings",
       label: "Settings",
       icon: Settings,
-      path: "/staq/settings",
+      path:baseurl+ "/settings",
     },
   ];
 
@@ -116,7 +116,7 @@ export default function StaqOverviewLayout({ children }) {
             </p>
 
             {/* Progress */}
-            <div className="bg-gray-100 rounded-lg p-4">
+            {/* <div className="bg-gray-100 rounded-lg p-4">
               <div className="flex justify-between items-center mb-2">
                 <div className="flex items-center">
                   <Target className="h-4 w-4 text-blue-600 mr-1" />
@@ -140,7 +140,7 @@ export default function StaqOverviewLayout({ children }) {
                 <span>{formatCurrency(selectedStaq.balance)}</span>
                 <span>{formatCurrency(selectedStaq.goal)}</span>
               </div>
-            </div>
+            </div> */}
           </div>
         </div>
 

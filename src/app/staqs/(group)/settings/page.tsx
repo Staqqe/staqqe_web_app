@@ -1,274 +1,323 @@
-'use client';
+"use client";
 
-import React, { useState } from 'react';
-import { 
-  User, 
-  Bell, 
-  Shield, 
-  CreditCard,
-  HelpCircle,
-  LogOut,
-  ChevronRight,
+import React, { useState } from "react";
+import { useRouter } from "next/navigation";
+// import { useAppContext } from '../layout';
+import {
+  Edit3,
+  Target,
+  Users,
+  Bell,
+  Trash2,
+  Lock,
+  Calendar,
+  AlertTriangle,
+  Save,
+  X,
+  Shield,
   Eye,
   EyeOff,
-  Edit,
-  X,
-  Check
-} from 'lucide-react';
+} from "lucide-react";
+import { useAppContext } from "@/app/layout";
 
-export default function StaqsSettingsPage() {
-  const [showEditProfile, setShowEditProfile] = useState(false);
-  const [showChangePassword, setShowChangePassword] = useState(false);
-  const [showPassword, setShowPassword] = useState(false);
+export default function StaqSettingsPage() {
+  const router = useRouter();
+  const { selectedStaq, updateStaq, removeStaq } = useAppContext();
+  const [showEditModal, setShowEditModal] = useState(false);
+  const [showDeleteModal, setShowDeleteModal] = useState(false);
+  const [editData, setEditData] = useState({
+    name: selectedStaq?.name || "",
+    description: selectedStaq?.description || "",
+    goal: selectedStaq?.goal || "",
+    duration: selectedStaq?.duration || 12,
+  });
   const [notifications, setNotifications] = useState({
-    contributions: true,
+    newContributions: true,
+    goalReached: true,
+    newMembers: false,
     requests: true,
-    goals: false,
-    marketing: false
   });
-  const [profileData, setProfileData] = useState({
-    firstName: 'John',
-    lastName: 'Doe',
-    email: 'john.doe@email.com',
-    phone: '+234 801 234 5678'
-  });
-  const [passwordData, setPasswordData] = useState({
-    currentPassword: '',
-    newPassword: '',
-    confirmPassword: ''
-  });
+
+  if (!selectedStaq) {
+    return <div className="p-4">No Staq selected</div>;
+  }
+
+  // Format currency
+  const formatCurrency = (amount) => {
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
+      currency: "NGN",
+    }).format(amount);
+  };
+
+  const handleUpdateStaq = (e) => {
+    e.preventDefault();
+    const updatedStaq = {
+      ...selectedStaq,
+      name: editData.name,
+      description: editData.description,
+      goal: parseFloat(editData.goal),
+      duration: parseInt(editData.duration),
+    };
+    updateStaq && updateStaq(updatedStaq);
+    setShowEditModal(false);
+  };
+
+  const handleDeleteStaq = () => {
+    removeStaq && removeStaq(selectedStaq.id);
+    setShowDeleteModal(false);
+    router.push("/staqs");
+  };
 
   const handleNotificationToggle = (key) => {
-    setNotifications(prev => ({
+    setNotifications((prev) => ({
       ...prev,
-      [key]: !prev[key]
+      [key]: !prev[key],
     }));
   };
 
-  const handleProfileUpdate = (e) => {
-    e.preventDefault();
-    console.log('Updating profile:', profileData);
-    setShowEditProfile(false);
-  };
-
-  const handlePasswordChange = (e) => {
-    e.preventDefault();
-    console.log('Changing password');
-    setShowChangePassword(false);
-    setPasswordData({
-      currentPassword: '',
-      newPassword: '',
-      confirmPassword: ''
-    });
-  };
-
   const settingsItems = [
+    // {
+    //   category: "Basic Information",
+    //   items: [
+    //     {
+    //       icon: Edit3,
+    //       title: "Edit Staq Details",
+    //       subtitle: "Change name, description, and goal",
+    //       action: () => setShowEditModal(true),
+    //       adminOnly: true,
+    //     },
+    //     {
+    //       icon: Target,
+    //       title: "Goal Settings",
+    //       subtitle: "Adjust savings target and timeline",
+    //       action: () => console.log("Goal settings"),
+    //       adminOnly: true,
+    //     },
+    //   ],
+    // },
+    // {
+    //   category: "Membership",
+    //   items: [
+    //     {
+    //       icon: Users,
+    //       title: "Member Permissions",
+    //       subtitle: "Manage member roles and access",
+    //       action: () => console.log("Member permissions"),
+    //       adminOnly: true,
+    //     },
+    //     {
+    //       icon: Lock,
+    //       title: "Privacy Settings",
+    //       subtitle: "Control who can join and see the staq",
+    //       action: () => console.log("Privacy settings"),
+    //       adminOnly: true,
+    //     },
+    //   ],
+    // },
     {
-      category: 'Account',
-      items: [
-        {
-          icon: User,
-          title: 'Profile Information',
-          subtitle: 'Update your personal details',
-          action: () => setShowEditProfile(true)
-        },
-        {
-          icon: Shield,
-          title: 'Security & Privacy',
-          subtitle: 'Change password and security settings',
-          action: () => setShowChangePassword(true)
-        },
-        {
-          icon: CreditCard,
-          title: 'Payment Methods',
-          subtitle: 'Manage your cards and bank accounts',
-          action: () => console.log('Payment methods')
-        }
-      ]
-    },
-    {
-      category: 'Preferences',
+      category: "Notifications",
       items: [
         {
           icon: Bell,
-          title: 'Notifications',
-          subtitle: 'Manage your notification preferences',
-          component: 'notifications'
-        }
-      ]
+          title: "Notification Preferences",
+          subtitle: "Choose what updates you receive",
+          component: "notifications",
+        },
+      ],
     },
+    // {
+    //   category: "Advanced",
+    //   items: [
+    //     {
+    //       icon: Calendar,
+    //       title: "Auto-Save Settings",
+    //       subtitle: "Set up automatic contributions",
+    //       action: () => console.log("Auto-save settings"),
+    //     },
+    //     {
+    //       icon: Shield,
+    //       title: "Security Settings",
+    //       subtitle: "Manage staq security options",
+    //       action: () => console.log("Security settings"),
+    //       adminOnly: true,
+    //     },
+    //   ],
+    // },
     {
-      category: 'Support',
+      category: "Danger Zone",
       items: [
         {
-          icon: HelpCircle,
-          title: 'Help & Support',
-          subtitle: 'Get help or contact support',
-          action: () => console.log('Help & Support')
-        }
-      ]
+          icon: Trash2,
+          title: "Delete Staq",
+          subtitle: "Permanently delete this staq",
+          action: () => setShowDeleteModal(true),
+          destructive: true,
+          adminOnly: true,
+        },
+      ],
     },
-    {
-      category: 'Account Management',
-      items: [
-        {
-          icon: LogOut,
-          title: 'Sign Out',
-          subtitle: 'Sign out of your account',
-          action: () => console.log('Sign out'),
-          destructive: true
-        }
-      ]
-    }
   ];
 
   return (
     <div className="p-4 space-y-6">
       {/* Header */}
       <div>
-        <h2 className="text-lg font-semibold">Settings</h2>
-        <p className="text-sm text-gray-500">Manage your account and preferences</p>
+        <h2 className="text-lg font-semibold">Staqs Settings</h2>
+        <p className="text-sm text-gray-500">
+          Manage  General Staq settings and preferences
+        </p>
       </div>
 
       {/* Settings Sections */}
       <div className="space-y-6">
         {settingsItems.map((section) => (
-          <div key={section.category} className="bg-white rounded-2xl border border-gray-200 overflow-hidden">
+          <div
+            key={section.category}
+            className="bg-white rounded-2xl border border-gray-200 overflow-hidden"
+          >
             <div className="px-6 py-4 bg-gray-50 border-b border-gray-200">
-              <h3 className="font-semibold text-gray-900">{section.category}</h3>
+              <h3 className="font-semibold text-gray-900">
+                {section.category}
+              </h3>
             </div>
             <div className="divide-y divide-gray-200">
-              {section.items.map((item, index) => (
-                <div key={index}>
-                  {item.component === 'notifications' ? (
-                    <div className="p-6">
-                      <div className="flex items-start space-x-3 mb-4">
-                        <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
-                          <item.icon className="h-5 w-5 text-blue-600" />
+              {section.items.map((item, index) => {
+                // Skip admin-only items if user is not admin
+                if (item.adminOnly && !selectedStaq.isAdmin) {
+                  return null;
+                }
+
+                return (
+                  <div key={index}>
+                    {item.component === "notifications" ? (
+                      <div className="p-6">
+                        <div className="flex items-start space-x-3 mb-4">
+                          <div className="w-10 h-10 bg-blue-100 rounded-full flex items-center justify-center">
+                            <item.icon className="h-5 w-5 text-blue-600" />
+                          </div>
+                          <div>
+                            <h4 className="font-medium">{item.title}</h4>
+                            <p className="text-sm text-gray-500">
+                              {item.subtitle}
+                            </p>
+                          </div>
                         </div>
-                        <div>
-                          <h4 className="font-medium">{item.title}</h4>
-                          <p className="text-sm text-gray-500">{item.subtitle}</p>
+
+                        <div className="space-y-4 ml-13">
+                          {Object.entries(notifications).map(([key, value]) => (
+                            <div
+                              key={key}
+                              className="flex items-center justify-between"
+                            >
+                              <div>
+                                <p className="font-medium">
+                                  {key === "newContributions" &&
+                                    "New Contributions"}
+                                  {key === "goalReached" && "Goal Reached"}
+                                  {key === "newMembers" && "New Members"}
+                                  {key === "requests" && "Payment Requests"}
+                                </p>
+                                <p className="text-sm text-gray-500">
+                                  {key === "newContributions" &&
+                                    "When someone contributes to this staq"}
+                                  {key === "goalReached" &&
+                                    "When the savings goal is achieved"}
+                                  {key === "newMembers" &&
+                                    "When new members join the staq"}
+                                  {key === "requests" &&
+                                    "When payment requests are sent"}
+                                </p>
+                              </div>
+                              <button
+                                onClick={() => handleNotificationToggle(key)}
+                                className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
+                                  value ? "bg-blue-600" : "bg-gray-200"
+                                }`}
+                              >
+                                <span
+                                  className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                                    value ? "translate-x-6" : "translate-x-1"
+                                  }`}
+                                />
+                              </button>
+                            </div>
+                          ))}
                         </div>
                       </div>
-                      
-                      <div className="space-y-4 ml-13">
-                        {Object.entries(notifications).map(([key, value]) => (
-                          <div key={key} className="flex items-center justify-between">
-                            <div>
-                              <p className="font-medium capitalize">
-                                {key === 'marketing' ? 'Marketing Communications' : `${key} Notifications`}
-                              </p>
-                              <p className="text-sm text-gray-500">
-                                {key === 'contributions' && 'Get notified when contributions are made'}
-                                {key === 'requests' && 'Get notified about new requests'}
-                                {key === 'goals' && 'Get notified when goals are reached'}
-                                {key === 'marketing' && 'Receive updates about new features'}
-                              </p>
-                            </div>
-                            <button
-                              onClick={() => handleNotificationToggle(key)}
-                              className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                                value ? 'bg-blue-600' : 'bg-gray-200'
+                    ) : (
+                      <button
+                        onClick={item.action}
+                        className={`w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors ${
+                          item.destructive ? "hover:bg-red-50" : ""
+                        }`}
+                      >
+                        <div className="flex items-center space-x-3">
+                          <div
+                            className={`w-10 h-10 rounded-full flex items-center justify-center ${
+                              item.destructive ? "bg-red-100" : "bg-blue-100"
+                            }`}
+                          >
+                            <item.icon
+                              className={`h-5 w-5 ${
+                                item.destructive
+                                  ? "text-red-600"
+                                  : "text-blue-600"
+                              }`}
+                            />
+                          </div>
+                          <div className="text-left">
+                            <h4
+                              className={`font-medium ${
+                                item.destructive
+                                  ? "text-red-600"
+                                  : "text-gray-900"
                               }`}
                             >
-                              <span
-                                className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
-                                  value ? 'translate-x-6' : 'translate-x-1'
-                                }`}
-                              />
-                            </button>
+                              {item.title}
+                            </h4>
+                            <p className="text-sm text-gray-500">
+                              {item.subtitle}
+                            </p>
                           </div>
-                        ))}
-                      </div>
-                    </div>
-                  ) : (
-                    <button
-                      onClick={item.action}
-                      className={`w-full p-6 flex items-center justify-between hover:bg-gray-50 transition-colors ${
-                        item.destructive ? 'hover:bg-red-50' : ''
-                      }`}
-                    >
-                      <div className="flex items-center space-x-3">
-                        <div className={`w-10 h-10 rounded-full flex items-center justify-center ${
-                          item.destructive 
-                            ? 'bg-red-100' 
-                            : 'bg-blue-100'
-                        }`}>
-                          <item.icon className={`h-5 w-5 ${
-                            item.destructive ? 'text-red-600' : 'text-blue-600'
-                          }`} />
                         </div>
-                        <div className="text-left">
-                          <h4 className={`font-medium ${
-                            item.destructive ? 'text-red-600' : 'text-gray-900'
-                          }`}>
-                            {item.title}
-                          </h4>
-                          <p className="text-sm text-gray-500">{item.subtitle}</p>
-                        </div>
-                      </div>
-                      <ChevronRight className="h-5 w-5 text-gray-400" />
-                    </button>
-                  )}
-                </div>
-              ))}
+                        <div className="text-gray-400">›</div>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
             </div>
           </div>
         ))}
       </div>
 
-      {/* Edit Profile Modal */}
-      {showEditProfile && (
+      {/* Edit Staq Modal */}
+      {showEditModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
           <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Edit Profile</h2>
-                <button 
-                  onClick={() => setShowEditProfile(false)}
+                <h2 className="text-xl font-semibold">Edit Staq</h2>
+                <button
+                  onClick={() => setShowEditModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-full"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <form onSubmit={handleProfileUpdate} className="space-y-6">
-                <div className="grid grid-cols-2 gap-4">
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      First Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.firstName}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, firstName: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                  <div>
-                    <label className="block text-sm font-medium text-gray-700 mb-2">
-                      Last Name
-                    </label>
-                    <input
-                      type="text"
-                      value={profileData.lastName}
-                      onChange={(e) => setProfileData(prev => ({ ...prev, lastName: e.target.value }))}
-                      className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                  </div>
-                </div>
-
+              <form onSubmit={handleUpdateStaq} className="space-y-6">
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Email Address
+                    Staq Name
                   </label>
                   <input
-                    type="email"
-                    value={profileData.email}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, email: e.target.value }))}
+                    type="text"
+                    value={editData.name}
+                    onChange={(e) =>
+                      setEditData((prev) => ({ ...prev, name: e.target.value }))
+                    }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
                   />
@@ -276,21 +325,82 @@ export default function StaqsSettingsPage() {
 
                 <div>
                   <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Phone Number
+                    Description
+                  </label>
+                  <textarea
+                    value={editData.description}
+                    onChange={(e) =>
+                      setEditData((prev) => ({
+                        ...prev,
+                        description: e.target.value,
+                      }))
+                    }
+                    rows="3"
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  />
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Savings Goal (NGN)
                   </label>
                   <input
-                    type="tel"
-                    value={profileData.phone}
-                    onChange={(e) => setProfileData(prev => ({ ...prev, phone: e.target.value }))}
+                    type="number"
+                    value={editData.goal}
+                    onChange={(e) =>
+                      setEditData((prev) => ({ ...prev, goal: e.target.value }))
+                    }
                     className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
                     required
+                    min="1000"
                   />
+                  <p className="text-xs text-gray-500 mt-1">
+                    Current: {formatCurrency(selectedStaq.goal)}
+                  </p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium text-gray-700 mb-2">
+                    Duration (months)
+                  </label>
+                  <select
+                    value={editData.duration}
+                    onChange={(e) =>
+                      setEditData((prev) => ({
+                        ...prev,
+                        duration: e.target.value,
+                      }))
+                    }
+                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
+                  >
+                    <option value="3">3 months</option>
+                    <option value="6">6 months</option>
+                    <option value="12">12 months</option>
+                    <option value="18">18 months</option>
+                    <option value="24">24 months</option>
+                  </select>
+                </div>
+
+                <div className="bg-yellow-50 p-4 rounded-lg">
+                  <div className="flex items-start">
+                    <AlertTriangle className="h-5 w-5 text-yellow-600 mr-2 mt-0.5" />
+                    <div>
+                      <p className="text-sm text-yellow-800 font-medium">
+                        Important
+                      </p>
+                      <p className="text-sm text-yellow-700">
+                        Changes to the goal amount will be visible to all
+                        members. Consider discussing major changes with your
+                        group first.
+                      </p>
+                    </div>
+                  </div>
                 </div>
 
                 <div className="flex space-x-3 pt-4">
                   <button
                     type="button"
-                    onClick={() => setShowEditProfile(false)}
+                    onClick={() => setShowEditModal(false)}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50"
                   >
                     Cancel
@@ -299,7 +409,7 @@ export default function StaqsSettingsPage() {
                     type="submit"
                     className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center"
                   >
-                    <Check className="h-4 w-4 mr-2" />
+                    <Save className="h-4 w-4 mr-2" />
                     Save Changes
                   </button>
                 </div>
@@ -309,97 +419,74 @@ export default function StaqsSettingsPage() {
         </div>
       )}
 
-      {/* Change Password Modal */}
-      {showChangePassword && (
+      {/* Delete Staq Modal */}
+      {showDeleteModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
-          <div className="bg-white rounded-2xl w-full max-w-md max-h-[90vh] overflow-y-auto">
+          <div className="bg-white rounded-2xl w-full max-w-md">
             <div className="p-6">
               <div className="flex items-center justify-between mb-6">
-                <h2 className="text-xl font-semibold">Change Password</h2>
-                <button 
-                  onClick={() => setShowChangePassword(false)}
+                <div className="flex items-center">
+                  <div className="w-12 h-12 bg-red-100 rounded-full flex items-center justify-center mr-4">
+                    <AlertTriangle className="h-6 w-6 text-red-600" />
+                  </div>
+                  <h2 className="text-xl font-semibold text-red-900">
+                    Delete Staq
+                  </h2>
+                </div>
+                <button
+                  onClick={() => setShowDeleteModal(false)}
                   className="p-2 hover:bg-gray-100 rounded-full"
                 >
                   <X className="h-5 w-5" />
                 </button>
               </div>
 
-              <form onSubmit={handlePasswordChange} className="space-y-6">
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Current Password
-                  </label>
-                  <div className="relative">
-                    <input
-                      type={showPassword ? 'text' : 'password'}
-                      value={passwordData.currentPassword}
-                      onChange={(e) => setPasswordData(prev => ({ ...prev, currentPassword: e.target.value }))}
-                      className="w-full px-4 py-3 pr-12 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                      required
-                    />
-                    <button
-                      type="button"
-                      onClick={() => setShowPassword(!showPassword)}
-                      className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                    >
-                      {showPassword ? <EyeOff className="h-5 w-5" /> : <Eye className="h-5 w-5" />}
-                    </button>
-                  </div>
-                </div>
+              <div className="space-y-4">
+                <p className="text-gray-700">
+                  Are you sure you want to delete{" "}
+                  <strong>"{selectedStaq.name}"</strong>? This action cannot be
+                  undone.
+                </p>
 
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    New Password
-                  </label>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={passwordData.newPassword}
-                    onChange={(e) => setPasswordData(prev => ({ ...prev, newPassword: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium text-gray-700 mb-2">
-                    Confirm New Password
-                  </label>
-                  <input
-                    type={showPassword ? 'text' : 'password'}
-                    value={passwordData.confirmPassword}
-                    onChange={(e) => setPasswordData(prev => ({ ...prev, confirmPassword: e.target.value }))}
-                    className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500"
-                    required
-                  />
-                </div>
-
-                <div className="bg-blue-50 p-4 rounded-lg">
-                  <p className="text-sm text-blue-700">
-                    <strong>Password requirements:</strong>
-                    <br />• At least 8 characters long
-                    <br />• Include uppercase and lowercase letters
-                    <br />• Include at least one number
-                    <br />• Include at least one special character
+                <div className="bg-red-50 p-4 rounded-lg">
+                  <p className="text-sm text-red-800 font-medium mb-2">
+                    This will:
                   </p>
+                  <ul className="text-sm text-red-700 space-y-1">
+                    <li>• Remove all members from the staq</li>
+                    <li>• Delete all transaction history</li>
+                    <li>• Return remaining balance to members</li>
+                    <li>• Permanently delete all staq data</li>
+                  </ul>
+                </div>
+
+                <div className="border border-gray-300 rounded-lg p-4">
+                  <p className="text-sm font-medium text-gray-700 mb-2">
+                    Type the staq name to confirm:
+                  </p>
+                  <input
+                    type="text"
+                    placeholder={selectedStaq.name}
+                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-red-500"
+                  />
                 </div>
 
                 <div className="flex space-x-3 pt-4">
                   <button
-                    type="button"
-                    onClick={() => setShowChangePassword(false)}
+                    onClick={() => setShowDeleteModal(false)}
                     className="flex-1 px-4 py-3 border border-gray-300 rounded-lg font-medium hover:bg-gray-50"
                   >
                     Cancel
                   </button>
                   <button
-                    type="submit"
-                    className="flex-1 bg-blue-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-blue-700 flex items-center justify-center"
+                    onClick={handleDeleteStaq}
+                    className="flex-1 bg-red-600 text-white px-4 py-3 rounded-lg font-medium hover:bg-red-700 flex items-center justify-center"
                   >
-                    <Shield className="h-4 w-4 mr-2" />
-                    Update Password
+                    <Trash2 className="h-4 w-4 mr-2" />
+                    Delete Staq
                   </button>
                 </div>
-              </form>
+              </div>
             </div>
           </div>
         </div>

@@ -13,7 +13,8 @@ import {
   TrendingUp,
   TrendingDown,
 } from "lucide-react";
-import { useAppContext } from "../layout";
+import { useAppContext } from "@/app/layout";
+// import { useAppContext } from "../layout";
 // import { useAppContext } from "@/app/layout";
 
 export default function StaqsTransactionsPage() {
