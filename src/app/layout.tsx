@@ -204,11 +204,21 @@ export default function RootLayout({ children }) {
   return (
     <html>
       <body>
-
+         <AppContext.Provider value={{
+      user,
+      selectedStaq,
+      setSelectedStaq,
+      staqs,
+      requests,
+      transactions
+    }}>
 
    <main className="flex-1 overflow-auto pb-20 md:pb-0">
             {children}
           </main>
+    </AppContext.Provider>
+
+
       </body>
     </html>
   );
